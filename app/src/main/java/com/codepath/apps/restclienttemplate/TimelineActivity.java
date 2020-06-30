@@ -108,8 +108,6 @@ public class TimelineActivity extends AppCompatActivity {
 
         }
         super.onActivityResult(requestCode, resultCode, data);
-
-
     }
 
     private void populateHomeTimeline() {
