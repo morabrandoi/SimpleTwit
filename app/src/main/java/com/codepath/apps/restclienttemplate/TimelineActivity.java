@@ -12,6 +12,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.facebook.stetho.common.ArrayListAccumulator;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
         populateHomeTimeline();
+        Log.i(TAG, tweets.toString());
     }
 
     private void populateHomeTimeline() {
@@ -52,12 +54,17 @@ public class TimelineActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "onSucces!");
                 JSONArray jsonArray = json.jsonArray;
-                
+                try {
+                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
+                    adapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    Log.e(TAG, "JSON exceptiom", e);
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.e(TAG, "onFailure!", throwable);
+                Log.e(TAG, "onFailure populating!: " + response, throwable);
             }
         });
     }
