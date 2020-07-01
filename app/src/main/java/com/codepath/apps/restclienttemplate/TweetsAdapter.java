@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
+    public static final String TAG = "TweetsAdapter";
 
     Context context;
     List<Tweet> tweets;
@@ -66,6 +68,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     // Define a View Holder
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProfileImage;
+        ImageView ivMedia;
         TextView tvBody;
         TextView tvScreenName;
         TextView tvRecency;
@@ -94,9 +97,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             super(itemView);
 
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            ivMedia = itemView.findViewById(R.id.ivMedia);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvRecency = itemView.findViewById(R.id.tvRecency);
+
         }
 
         public void bind(Tweet tweet) {
@@ -105,8 +110,14 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             String rawJsonDate = tweet.createdAt;
             String formattedRecent = getRelativeTimeAgo(rawJsonDate);
             tvRecency.setText(formattedRecent);
-
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
+
+            Log.i(TAG, "My media URL: " + tweet.mediaUrl);
+            if (tweet.mediaUrl != null){
+                Glide.with(context).load(tweet.mediaUrl).into(ivMedia);
+                ivMedia.setVisibility(ImageView.VISIBLE);
+            }
+
         }
     }
 }

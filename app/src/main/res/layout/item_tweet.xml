@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="10dp">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -41,5 +43,34 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/tvScreenName"
-        tools:text="TIME SHOUDL GO HERE" />
+        tools:text="TIME SHOULD GO HERE" />
+
+    <RelativeLayout
+        android:id="@+id/ivMediaWrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBody"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/ivMedia"
+            android:layout_width="257dp"
+            android:layout_height="171dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp"
+            android:visibility="gone"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btnReply"
+        android:layout_width="70dp"
+        android:layout_height="36dp"
+        android:layout_below="@+id/ivMediaWrapper"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="5dp"
+        android:text="Reply" />
+
 </RelativeLayout>

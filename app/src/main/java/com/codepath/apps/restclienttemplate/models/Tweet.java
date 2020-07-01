@@ -10,8 +10,11 @@ import java.util.List;
 
 @Parcel
 public class Tweet {
+    public static final String TAG = "Tweet";
+
     public String body;
     public String createdAt;
+    public String mediaUrl;
     public User user;
 
     // Empty constructor for Required by parcel library
@@ -22,6 +25,18 @@ public class Tweet {
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+
+        // Pulling media URL if it exists
+        JSONObject entities = jsonObject.getJSONObject("entities");
+        boolean hasMedia = entities.has("media");
+        if (hasMedia){
+            String mediaURL = entities.getJSONArray("media").getJSONObject(0).getString("media_url_https");
+            tweet.mediaUrl = mediaURL;
+        }
+        else {
+            tweet.mediaUrl = null;
+        }
+
         return tweet;
     }
 
