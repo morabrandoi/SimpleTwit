@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -37,6 +39,7 @@ public class TimelineActivity extends AppCompatActivity {
     List<Tweet> tweets;
     TweetsAdapter adapter;
     SwipeRefreshLayout swipeContainer;
+    EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,8 @@ public class TimelineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timeline);
 
         client = TwitterApp.getRestClient(this);
+
+
 
         swipeContainer = findViewById(R.id.swipeContainer);
         // Configuring refresh
@@ -67,13 +72,27 @@ public class TimelineActivity extends AppCompatActivity {
         // Init the list of tweets and adpater
         tweets = new ArrayList<Tweet>();
         adapter = new TweetsAdapter(this, tweets);
-
         // Recycler View setup : layout manager and adapter
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
+
+        rvTweets.setLayoutManager(layoutManager);
         rvTweets.setAdapter(adapter);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.i(TAG, "onload more + : "+page);
+                loadMoreData();
+            }
+        };
+        // Adds scroll listener ot recyclerView
+        rvTweets.addOnScrollListener(scrollListener);
+
         populateHomeTimeline();
-        Log.i(TAG, tweets.toString());
+
     }
+
 
     // Inflate custom menu for action bar
     @Override
@@ -110,11 +129,33 @@ public class TimelineActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void loadMoreData() {
+        client.getNextPageOfTweets(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "onSucces loading more data!" + json.toString());
+                // Deserialize and construct new model objects from API response
+                JSONArray jsonArray = json.jsonArray;
+                try {
+                    List<Tweet> tweets = Tweet.fromJsonArray(jsonArray);
+                    adapter.addAll(tweets);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "On failure loading more data");
+            }
+        }, tweets.get(tweets.size() - 1).id);
+    }
+
     private void populateHomeTimeline() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
-                Log.i(TAG, "onSucces!");
+                Log.i(TAG, "onSucces populating!");
                 JSONArray jsonArray = json.jsonArray;
                 try {
                     adapter.clear();
@@ -132,6 +173,7 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
 }
