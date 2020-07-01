@@ -1,15 +1,19 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -70,8 +74,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivProfileImage;
         ImageView ivMedia;
         TextView tvBody;
+        TextView tvName;
         TextView tvScreenName;
         TextView tvRecency;
+        Button btnReply;
 
         private String getRelativeTimeAgo(String rawJsonDate) {
             String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
@@ -100,24 +106,42 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivMedia = itemView.findViewById(R.id.ivMedia);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
+            tvName = itemView.findViewById(R.id.tvName);
             tvRecency = itemView.findViewById(R.id.tvRecency);
+            btnReply = itemView.findViewById(R.id.btnReply);
 
         }
 
         public void bind(Tweet tweet) {
+            // Setting tweet body and screen name and name
+            String fScreenName = "@" + tweet.user.screenName;
+            tvScreenName.setText(fScreenName);
             tvBody.setText(tweet.body);
-            tvScreenName.setText(tweet.user.screenName);
+            tvName.setText(tweet.user.name);
+
+            // Setting recency text
             String rawJsonDate = tweet.createdAt;
             String formattedRecent = getRelativeTimeAgo(rawJsonDate);
             tvRecency.setText(formattedRecent);
+            // Setting profile image
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
 
+            // Setting media image if it exists.
             Log.i(TAG, "My media URL: " + tweet.mediaUrl);
             if (tweet.mediaUrl != null){
                 Glide.with(context).load(tweet.mediaUrl).into(ivMedia);
                 ivMedia.setVisibility(ImageView.VISIBLE);
             }
 
+            // Binding onClick listener to button
+            btnReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, ComposeActivity.class);
+                    intent.putExtra("replyTo", tvScreenName.getText());
+                    ((Activity) context).startActivityForResult(intent, TimelineActivity.REQUEST_CODE);
+                }
+            });
         }
     }
 }
