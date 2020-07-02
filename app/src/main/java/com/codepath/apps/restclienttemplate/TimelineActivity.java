@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -42,11 +44,22 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
     TweetsAdapter adapter;
     SwipeRefreshLayout swipeContainer;
     EndlessRecyclerViewScrollListener scrollListener;
+    Toolbar toolBar;
+    Toolbar bottomBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+
+        toolBar = (Toolbar) findViewById(R.id.toolBar);
+        setSupportActionBar(toolBar);
+        getSupportActionBar().setTitle("");
+//        toolBar.setLogo(R.drawable.ic_vector_logo);
+
+        bottomBar = (Toolbar) findViewById(R.id.toolBarBottom);
+        bottomBar.inflateMenu(R.menu.menu_main_bottom);
+        bottomBar.setTitle("");
 
         client = TwitterApp.getRestClient(this);
 
