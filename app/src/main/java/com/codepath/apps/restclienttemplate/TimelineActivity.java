@@ -109,23 +109,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
         return super.onOptionsItemSelected(item);
     }
 
-    // Obsolete I think
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK){
-//            // Get data from the intent (tweet Object)
-//            Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
-//            // Update Recycler View with new Tweet
-//            // Modify data source of tweets
-//            Log.i(TAG, "WONDERING IF THIS EVERY EXECUTES");
-//            tweets.add(0, tweet);
-//            // Update adapter
-//            adapter.notifyItemInserted(0);
-//            rvTweets.smoothScrollToPosition(0);
-//        }
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
-
     private void loadMoreData() {
         client.getNextPageOfTweets(new JsonHttpResponseHandler() {
             @Override
