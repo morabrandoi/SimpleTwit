@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/ivProfileImage"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
@@ -21,10 +21,11 @@
         android:id="@+id/tvScreenName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
+        android:layout_below="@+id/tvName"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="0dp"
-        android:layout_toEndOf="@+id/tvName"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        android:textSize="10sp"
         tools:text="White Hosue" />
 
     <TextView
@@ -33,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvScreenName"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:autoLink="all"
         android:linksClickable="true"
@@ -43,9 +44,9 @@
         android:id="@+id/tvRecency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/tvScreenName"
-        tools:text="TIME SHOULD GO HERE" />
+        android:layout_marginStart="-80dp"
+        android:layout_toEndOf="@+id/tvName"
+        tools:text="25 min. ago" />
 
     <RelativeLayout
         android:id="@+id/ivMediaWrapper"
@@ -65,23 +66,56 @@
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/btnReply"
-        android:layout_width="70dp"
-        android:layout_height="36dp"
-        android:layout_below="@+id/ivMediaWrapper"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="5dp"
-        android:text="Reply" />
-
     <TextView
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
+        android:layout_marginEnd="100dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         tools:text="Brando" />
+
+    <ImageView
+        android:id="@+id/iconReply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivMediaWrapper"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="60dp"
+        android:layout_toStartOf="@+id/iconRetweet"
+        android:tint="#000000"
+        app:srcCompat="@drawable/vector_compose_dm_fab" />
+
+    <ImageView
+        android:id="@+id/iconRetweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivMediaWrapper"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="60dp"
+        android:layout_toStartOf="@+id/iconHeart"
+        app:srcCompat="@drawable/ic_vector_retweet_stroke" />
+
+    <ImageView
+        android:id="@+id/iconDM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivMediaWrapper"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        app:srcCompat="@drawable/ic_vector_compose_dm" />
+
+    <ImageView
+        android:id="@+id/iconHeart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivMediaWrapper"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="60dp"
+        android:layout_toStartOf="@+id/iconDM"
+        app:srcCompat="@drawable/ic_vector_heart_stroke" />
 
 </RelativeLayout>

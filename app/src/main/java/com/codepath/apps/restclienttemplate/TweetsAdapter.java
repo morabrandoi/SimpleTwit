@@ -74,11 +74,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProfileImage;
         ImageView ivMedia;
+        ImageView iconReply;
         TextView tvBody;
         TextView tvName;
         TextView tvScreenName;
         TextView tvRecency;
-        Button btnReply;
 
         private String getRelativeTimeAgo(String rawJsonDate) {
             String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
@@ -109,7 +109,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvName = itemView.findViewById(R.id.tvName);
             tvRecency = itemView.findViewById(R.id.tvRecency);
-            btnReply = itemView.findViewById(R.id.btnReply);
+
+            iconReply = itemView.findViewById(R.id.iconReply);
 
         }
 
@@ -134,17 +135,17 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 ivMedia.setVisibility(ImageView.VISIBLE);
             }
 
-            // Binding onClick listener to button
-            btnReply.setOnClickListener(new View.OnClickListener() {
+            iconReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     FragmentManager fm = ((TimelineActivity) context).getSupportFragmentManager();
                     ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance("Some Title", tweet);
                     // Edit instance to take in twitter handle as argument
                     composeDialogFragment.show(fm, "fragment_compose");
-
                 }
             });
+
+
         }
     }
 }
