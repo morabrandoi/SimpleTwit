@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.codepath.apps.restclienttemplate.databinding.FragmentComposeDialogBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -51,37 +52,25 @@ public class ComposeDialogFragment extends DialogFragment implements TextView.On
     }
 // Non-Static
     TwitterClient client;
-    EditText etCompose;
-    Button btnTweet;
-    TextView tvCount;
     Tweet finishedTweet;
 
     // Empty constructor required for dialogFragment
     public ComposeDialogFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_compose_dialog, container);
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final FragmentComposeDialogBinding binding = FragmentComposeDialogBinding.inflate(getLayoutInflater(), container, false);
+        View view = binding.getRoot();
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // Get field from view
         client = TwitterApp.getRestClient(getContext());
-
-        etCompose = view.findViewById(R.id.etCompose);
-        btnTweet = view.findViewById(R.id.btnTweet);
-        tvCount = view.findViewById(R.id.tvCount);
 
         Bundle args = getArguments();
         if (args.containsKey("screen_name")) {
             String preFill = "@" + args.getString("screen_name") + " ";
-            etCompose.setText(preFill);
+            binding.etCompose.setText(preFill);
         }
 
-        etCompose.addTextChangedListener(new TextWatcher() {
+        binding.etCompose.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -89,10 +78,10 @@ public class ComposeDialogFragment extends DialogFragment implements TextView.On
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                int tweetLength = etCompose.getText().toString().length();
+                int tweetLength = binding.etCompose.getText().toString().length();
                 int charsLeft = MAX_TWEET_LENGTH - tweetLength;
                 String charLeftMessage = charsLeft + "/" + MAX_TWEET_LENGTH;
-                tvCount.setText(charLeftMessage);
+                binding.tvCount.setText(charLeftMessage);
             }
 
             @Override
@@ -102,10 +91,10 @@ public class ComposeDialogFragment extends DialogFragment implements TextView.On
         });
 
         // Set click listener on the button.
-        btnTweet.setOnClickListener(new View.OnClickListener() {
+        binding.btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String tweetContent = etCompose.getText().toString();
+                String tweetContent = binding.etCompose.getText().toString();
                 // If tweet is too long or too short, don't tweet, tell user.
                 if (tweetContent.isEmpty()) {
                     Toast.makeText(getContext(), "Sorry your tweet cannot be empty!", Toast.LENGTH_LONG).show();
@@ -122,7 +111,7 @@ public class ComposeDialogFragment extends DialogFragment implements TextView.On
                         try {
                             finishedTweet = Tweet.fromJson(json.jsonObject);
                             Log.i(TAG, "publishedTweet says: " + finishedTweet.body);
-                            onEditorAction(etCompose, EditorInfo.IME_ACTION_DONE, null);
+                            onEditorAction(binding.etCompose, EditorInfo.IME_ACTION_DONE, null);
                             dismiss();
 
                         } catch (JSONException e) {
@@ -139,9 +128,16 @@ public class ComposeDialogFragment extends DialogFragment implements TextView.On
         });
 
         // Show soft keyboard automatically and request focus to etCompose
-        etCompose.requestFocus();
+        binding.etCompose.requestFocus();
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
