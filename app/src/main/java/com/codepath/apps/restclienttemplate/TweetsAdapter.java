@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.ImageViewTargetFactory;
 import com.bumptech.glide.request.target.Target;
@@ -61,7 +62,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         final Tweet tweet = tweets.get(position);
         String fScreenName = "@" + tweet.user.screenName;
 
-
         holder.binding.tvScreenName.setText(fScreenName);
         holder.binding.tvBody.setText(tweet.body);
         holder.binding.tvName.setText(tweet.user.name);
@@ -71,7 +71,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         String formattedRecent = getRelativeTimeAgo(rawJsonDate);
         holder.binding.tvRecency.setText(formattedRecent);
         // Setting profile image
-        Glide.with(context).load(tweet.user.profileImageUrl).into(holder.binding.ivProfileImage);
+        Glide.with(context).load(tweet.user.profileImageUrl).transform(new RoundedCorners( 80)).into(holder.binding.ivProfileImage);
 
         // Setting media image if it exists.
         Log.i(TAG, "My media URL: " + tweet.mediaUrl);
