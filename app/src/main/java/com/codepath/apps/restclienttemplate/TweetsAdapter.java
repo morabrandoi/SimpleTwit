@@ -18,6 +18,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
+import com.codepath.apps.restclienttemplate.databinding.ItemTweetBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import java.text.ParseException;
@@ -31,6 +33,26 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     Context context;
     List<Tweet> tweets;
 
+    private String getRelativeTimeAgo(String rawJsonDate) {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        String relativeDate = "";
+        try {
+            long dateMillis = sf.parse(rawJsonDate).getTime();
+            relativeDate = DateUtils.getRelativeTimeSpanString(
+                    dateMillis,
+                    System.currentTimeMillis(),
+                    DateUtils.SECOND_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_RELATIVE).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return relativeDate;
+    }
+
     public TweetsAdapter(Context context, List<Tweet> tweets) {
         this.context = context;
         this.tweets = tweets;
@@ -40,17 +62,45 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_tweet, parent, false);
-        return new ViewHolder(view);
+        ItemTweetBinding binding = ItemTweetBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
     }
 
     // Bind values based on position of the element
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Get data at position
-        Tweet tweet = tweets.get(position);
-        // Bind tweet to view holder
-        holder.bind(tweet);
+        final Tweet tweet = tweets.get(position);
+        String fScreenName = "@" + tweet.user.screenName;
+
+
+        holder.binding.tvScreenName.setText(fScreenName);
+        holder.binding.tvBody.setText(tweet.body);
+        holder.binding.tvName.setText(tweet.user.name);
+
+        // Setting recency text
+        String rawJsonDate = tweet.createdAt;
+        String formattedRecent = getRelativeTimeAgo(rawJsonDate);
+        holder.binding.tvRecency.setText(formattedRecent);
+        // Setting profile image
+        Glide.with(context).load(tweet.user.profileImageUrl).into(holder.binding.ivProfileImage);
+
+        // Setting media image if it exists.
+        Log.i(TAG, "My media URL: " + tweet.mediaUrl);
+        if (tweet.mediaUrl != null){
+            Glide.with(context).load(tweet.mediaUrl).into(holder.binding.ivMedia);
+            holder.binding.ivMedia.setVisibility(ImageView.VISIBLE);
+        }
+
+        holder.binding.iconReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = ((TimelineActivity) context).getSupportFragmentManager();
+                ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance("Some Title", tweet);
+                // Edit instance to take in twitter handle as argument
+                composeDialogFragment.show(fm, "fragment_compose");
+            }
+        });
     }
 
     @Override
@@ -72,82 +122,12 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     // Define a View Holder
     public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivProfileImage;
-        ImageView ivMedia;
-        ImageView iconReply;
-        TextView tvBody;
-        TextView tvName;
-        TextView tvScreenName;
-        TextView tvRecency;
-
-        private String getRelativeTimeAgo(String rawJsonDate) {
-            String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-            SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
-            sf.setLenient(true);
-
-            String relativeDate = "";
-            try {
-                long dateMillis = sf.parse(rawJsonDate).getTime();
-                relativeDate = DateUtils.getRelativeTimeSpanString(
-                        dateMillis,
-                        System.currentTimeMillis(),
-                        DateUtils.SECOND_IN_MILLIS,
-                        DateUtils.FORMAT_ABBREV_RELATIVE).toString();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            return relativeDate;
-        }
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
-            ivMedia = itemView.findViewById(R.id.ivMedia);
-            tvBody = itemView.findViewById(R.id.tvBody);
-            tvScreenName = itemView.findViewById(R.id.tvScreenName);
-            tvName = itemView.findViewById(R.id.tvName);
-            tvRecency = itemView.findViewById(R.id.tvRecency);
-
-            iconReply = itemView.findViewById(R.id.iconReply);
-
-        }
-
-        public void bind(final Tweet tweet) {
-            // Setting tweet body and screen name and name
-            String fScreenName = "@" + tweet.user.screenName;
-            tvScreenName.setText(fScreenName);
-            tvBody.setText(tweet.body);
-            tvName.setText(tweet.user.name);
-
-            // Setting recency text
-            String rawJsonDate = tweet.createdAt;
-            String formattedRecent = getRelativeTimeAgo(rawJsonDate);
-            tvRecency.setText(formattedRecent);
-            // Setting profile image
-            Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
-
-            // Setting media image if it exists.
-            Log.i(TAG, "My media URL: " + tweet.mediaUrl);
-            if (tweet.mediaUrl != null){
-                Glide.with(context).load(tweet.mediaUrl).into(ivMedia);
-                ivMedia.setVisibility(ImageView.VISIBLE);
-            }
-
-            iconReply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentManager fm = ((TimelineActivity) context).getSupportFragmentManager();
-                    ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance("Some Title", tweet);
-                    // Edit instance to take in twitter handle as argument
-                    composeDialogFragment.show(fm, "fragment_compose");
-                }
-            });
+        ItemTweetBinding binding;
 
 
-
-
+        public ViewHolder(ItemTweetBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }
