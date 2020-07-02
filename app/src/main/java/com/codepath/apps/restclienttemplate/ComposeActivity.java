@@ -40,14 +40,6 @@ public class ComposeActivity extends AppCompatActivity {
         btnTweet = findViewById(R.id.btnTweet);
         tvCount = findViewById(R.id.tvCount);
 
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            if (extras.containsKey("replyTo")) {
-                String preFill = intent.getStringExtra("replyTo") + " ";
-                etCompose.setText(preFill);
-            }
-        }
 
         etCompose.addTextChangedListener(new TextWatcher() {
             @Override
@@ -69,12 +61,12 @@ public class ComposeActivity extends AppCompatActivity {
             }
         });
 
-        // Set click litener on the button.
+        // Set click listener on the button.
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String tweetContent = etCompose.getText().toString();
-                // If tweet is too long or too short, dont tweet, tell user.
+                // If tweet is too long or too short, don't tweet, tell user.
                 if (tweetContent.isEmpty()){
                     Toast.makeText(ComposeActivity.this, "Sorry your tweet cannot be empty!", Toast.LENGTH_LONG).show();
                     return;
@@ -91,12 +83,6 @@ public class ComposeActivity extends AppCompatActivity {
                             Tweet tweet = Tweet.fromJson(json.jsonObject);
                             Log.i(TAG, "publishedTweet says: " + tweet.body);
 
-                            // Moving back to parent activity on tweet success
-                            Intent intent = new Intent();
-                            intent.putExtra("tweet", Parcels.wrap(tweet));
-                            setResult(RESULT_OK, intent);
-                            finish();
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -107,13 +93,8 @@ public class ComposeActivity extends AppCompatActivity {
                         Log.e(TAG, "onFailure to publish tweet, response: " + response, throwable);
                     }
                 });
-                // Make an API call to twitter to publish tweet
-
             }
         });
-
-
-
 
     }
 }

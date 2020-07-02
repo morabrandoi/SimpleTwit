@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -112,7 +113,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         }
 
-        public void bind(Tweet tweet) {
+        public void bind(final Tweet tweet) {
             // Setting tweet body and screen name and name
             String fScreenName = "@" + tweet.user.screenName;
             tvScreenName.setText(fScreenName);
@@ -137,9 +138,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             btnReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, ComposeActivity.class);
-                    intent.putExtra("replyTo", tvScreenName.getText());
-                    ((Activity) context).startActivityForResult(intent, TimelineActivity.REQUEST_CODE);
+                    FragmentManager fm = ((TimelineActivity) context).getSupportFragmentManager();
+                    ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance("Some Title", tweet);
+                    // Edit instance to take in twitter handle as argument
+                    composeDialogFragment.show(fm, "fragment_compose");
+
                 }
             });
         }

@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
@@ -29,7 +30,8 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements ComposeDialogFragment.ComposeDialogListener {
+
 
     public static final String TAG = "TimelineActivity";
     public static final int REQUEST_CODE = 20;
@@ -48,10 +50,8 @@ public class TimelineActivity extends AppCompatActivity {
 
         client = TwitterApp.getRestClient(this);
 
-
-
         swipeContainer = findViewById(R.id.swipeContainer);
-        // Configuring refresh
+
         swipeContainer.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -66,13 +66,9 @@ public class TimelineActivity extends AppCompatActivity {
                 populateHomeTimeline();
             }
         });
-
-        // Find the recycler view
         rvTweets = findViewById(R.id.rvTweets);
-        // Init the list of tweets and adpater
         tweets = new ArrayList<Tweet>();
         adapter = new TweetsAdapter(this, tweets);
-        // Recycler View setup : layout manager and adapter
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
 
@@ -90,7 +86,6 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.addOnScrollListener(scrollListener);
 
         populateHomeTimeline();
-
     }
 
 
@@ -106,28 +101,30 @@ public class TimelineActivity extends AppCompatActivity {
         // If compose Icon is tapped
         if (item.getItemId() == R.id.compose){
             // Navigate to the compose activity
-            Intent intent = new Intent(this, ComposeActivity.class);
-            startActivityForResult(intent, REQUEST_CODE);
+            FragmentManager fm = this.getSupportFragmentManager();
+            ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance("Some Title", null);
+            composeDialogFragment.show(fm, "fragment_compose");
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK){
-            // Get data from the intent (tweet Object)
-            Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
-            // Update Recycler View with new Tweet
-            // Modify data source of tweets
-            tweets.add(0, tweet);
-            // Update adapter
-            adapter.notifyItemInserted(0);
-            rvTweets.smoothScrollToPosition(0);
-
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+    // Obsolete I think
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK){
+//            // Get data from the intent (tweet Object)
+//            Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
+//            // Update Recycler View with new Tweet
+//            // Modify data source of tweets
+//            Log.i(TAG, "WONDERING IF THIS EVERY EXECUTES");
+//            tweets.add(0, tweet);
+//            // Update adapter
+//            adapter.notifyItemInserted(0);
+//            rvTweets.smoothScrollToPosition(0);
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 
     private void loadMoreData() {
         client.getNextPageOfTweets(new JsonHttpResponseHandler() {
@@ -163,7 +160,7 @@ public class TimelineActivity extends AppCompatActivity {
 
                     swipeContainer.setRefreshing(false);
                 } catch (JSONException e) {
-                    Log.e(TAG, "JSON exceptiom", e);
+                    Log.e(TAG, "JSON exception", e);
                 }
             }
 
@@ -175,5 +172,11 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
 
-
+    @Override
+    public void onFinishEditDialog(Tweet tweet) {
+        Log.i(TAG, "This is the tweet body: " + tweet.body);
+        tweets.add(0, tweet);
+        adapter.notifyItemInserted(0);
+        rvTweets.smoothScrollToPosition(0);
+    }
 }
