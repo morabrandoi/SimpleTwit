@@ -52,9 +52,9 @@
         android:id="@+id/ivMediaWrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvBody"
+        android:layout_below="@+id/pgBar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="0dp">
 
         <ImageView
             android:id="@+id/ivMedia"
@@ -117,5 +117,15 @@
         android:layout_marginEnd="60dp"
         android:layout_toStartOf="@+id/iconDM"
         app:srcCompat="@drawable/ic_vector_heart_stroke" />
+
+    <ProgressBar
+        android:id="@+id/pgBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBody"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
 
 </RelativeLayout>
