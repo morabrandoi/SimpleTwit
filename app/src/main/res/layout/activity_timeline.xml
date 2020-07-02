@@ -9,11 +9,22 @@
     tools:context=".TimelineActivity">
 
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="#232839"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/toolBarBottom"
+        android:layout_below="@+id/toolBar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
@@ -36,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:background="#171A25"
+        android:background="#232839"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme" />
 
