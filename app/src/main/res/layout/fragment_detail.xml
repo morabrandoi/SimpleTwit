@@ -33,9 +33,9 @@
         android:id="@+id/tvBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ivProfileImage"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="0dp"
+        android:layout_below="@+id/tvScreenName"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:autoLink="all"
         android:linksClickable="true"
@@ -45,8 +45,10 @@
         android:id="@+id/tvRecency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="-80dp"
-        android:layout_toEndOf="@+id/tvName"
+        android:layout_alignTop="@+id/tvScreenName"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/tvScreenName"
         tools:text="25 min. ago" />
 
     <RelativeLayout
@@ -54,15 +56,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/pgBar"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="0dp">
 
         <ImageView
             android:id="@+id/ivMedia"
-            android:layout_width="400dp"
-            android:layout_height="270dp"
+            android:layout_width="370dp"
+            android:layout_height="245dp"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="0dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true"
             android:visibility="gone"
             tools:srcCompat="@tools:sample/backgrounds/scenic"
             tools:visibility="visible" />
@@ -73,9 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="100dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:textSize="18sp"
         tools:text="Brando" />
@@ -85,8 +85,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivMediaWrapper"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="60dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="30dp"
         android:layout_toStartOf="@+id/iconRetweet"
         android:tint="#FFFFFF"
         app:srcCompat="@drawable/vector_compose_dm_fab" />
@@ -96,8 +96,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivMediaWrapper"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="60dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="30dp"
         android:layout_toStartOf="@+id/iconHeart"
         android:tint="#FFFFFF"
         app:srcCompat="@drawable/ic_vector_retweet_stroke" />
@@ -108,8 +108,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivMediaWrapper"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="60dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
         android:tint="#FFFFFF"
         app:srcCompat="@drawable/ic_vector_compose_dm" />
 
@@ -118,8 +118,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivMediaWrapper"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="60dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="30dp"
         android:layout_toStartOf="@+id/iconDM"
         android:tint="#FFFFFF"
         app:srcCompat="@drawable/ic_vector_heart_stroke" />
@@ -131,7 +131,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvBody"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="10dp"
         android:visibility="gone"
         tools:visibility="visible" />
 
