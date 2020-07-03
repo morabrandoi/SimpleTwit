@@ -71,14 +71,41 @@ public class TwitterClient extends OAuthBaseClient {
 		client.post(apiUrl, params, "", handler);
 	}
 
+	public void publishReplyTweet(String tweetContent, long id, JsonHttpResponseHandler handler){
+		String apiUrl = getApiUrl("/statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("status", tweetContent);
+		client.post(apiUrl, params, "", handler);
+	}
 
+	public void reTweet(long id, JsonHttpResponseHandler handler){
+		String urlEnd = "statuses/retweet/" + id + ".json";
+		String apiUrl = getApiUrl(urlEnd);
+		RequestParams params = new RequestParams();
 
-	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
-	 * 	  i.e getApiUrl("statuses/home_timeline.json");
-	 * 2. Define the parameters to pass to the request (query or body)
-	 *    i.e RequestParams params = new RequestParams("foo", "bar");
-	 * 3. Define the request method and make a call to the client
-	 *    i.e client.get(apiUrl, params, handler);
-	 *    i.e client.post(apiUrl, params, handler);
-	 */
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void unReTweet(long id, JsonHttpResponseHandler handler){
+		String urlEnd = "statuses/unretweet/" + id + ".json";
+		String apiUrl = getApiUrl(urlEnd);
+		RequestParams params = new RequestParams();
+
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void like(long id, JsonHttpResponseHandler handler){
+		String apiUrl = getApiUrl("/favorites/create.json");
+		RequestParams params = new RequestParams();
+		params.put("id", id);
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void unLike(long id, JsonHttpResponseHandler handler){
+		String apiUrl = getApiUrl("/favorites/destroy.json");
+		RequestParams params = new RequestParams();
+		params.put("id", id);
+		client.post(apiUrl, params, "", handler);
+	}
+
 }

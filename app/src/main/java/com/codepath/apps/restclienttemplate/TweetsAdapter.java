@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,11 +32,14 @@ import com.bumptech.glide.request.target.Target;
 import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.databinding.ItemTweetBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.Headers;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
     public static final String TAG = "TweetsAdapter";
@@ -74,7 +79,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         Glide.with(context).load(tweet.user.profileImageUrl).transform(new RoundedCorners( 80)).into(holder.binding.ivProfileImage);
 
         // Setting media image if it exists.
-        Log.i(TAG, "My media URL: " + tweet.mediaUrl);
         if (tweet.mediaUrl != null){
             holder.binding.ivMedia.setVisibility(ImageView.VISIBLE);
             holder.binding.pgBar.setVisibility(ProgressBar.VISIBLE);
@@ -107,6 +111,118 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 ComposeDialogFragment composeDialogFragment = ComposeDialogFragment.newInstance("Some Title", tweet);
                 // Edit instance to take in twitter handle as argument
                 composeDialogFragment.show(fm, "fragment_compose");
+            }
+        });
+
+        if (tweet.reTweeted){
+            holder.binding.iconRetweet.setColorFilter(Color.rgb(0,0,255));
+        }
+        holder.binding.iconRetweet.setOnClickListener(new View.OnClickListener() {
+            TwitterClient client = TwitterApp.getRestClient(context);
+
+            @Override
+            public void onClick(View view) {
+                final int white = Color.rgb(255,255,255);
+                final int blue = Color.rgb(0,0,255);
+                if (!tweet.reTweeted){ // retweet
+                    tweet.reTweeted = true;
+                    holder.binding.iconRetweet.setColorFilter(blue);
+                    client.reTweet(tweet.id, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.i(TAG, "Successful retweet");
+                            Toast.makeText(context, "Successful Re-tweet!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.e(TAG, "UNSuccessful retweet");
+                            Toast.makeText(context, "Failure to re-tweet", Toast.LENGTH_SHORT).show();
+                            holder.binding.iconRetweet.setColorFilter(white);
+                            tweet.reTweeted = false;
+                        }
+                    });
+                }
+                else{ // unretweet
+                    tweet.reTweeted = false;
+                    holder.binding.iconRetweet.setColorFilter(white);
+                    client.unReTweet(tweet.id, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.i(TAG, "Successful unretweet");
+                            Toast.makeText(context, "Successful unretweet!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.e(TAG, "UNSuccessful unretweet");
+                            Toast.makeText(context, "failure to unretweet!", Toast.LENGTH_SHORT).show();
+                            holder.binding.iconRetweet.setColorFilter(blue);
+                            tweet.reTweeted = true;
+                        }
+                    });
+                }
+            }
+        });
+
+        if (tweet.liked){
+            holder.binding.iconHeart.setColorFilter(Color.rgb(255,0,0));
+        }
+        holder.binding.iconHeart.setOnClickListener(new View.OnClickListener() {
+            TwitterClient client = TwitterApp.getRestClient(context);
+
+            @Override
+            public void onClick(View view) {
+                final int white = Color.rgb(255,255,255);
+                final int red = Color.rgb(255,0,0);
+                if (!tweet.liked){ // like it
+                    tweet.liked = true;
+                    holder.binding.iconHeart.setColorFilter(red);
+                    client.like(tweet.id, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.i(TAG, "Successful liking");
+                            Toast.makeText(context, "Successful like!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.e(TAG, "UNSuccessful like");
+                            Toast.makeText(context, "Failure to like", Toast.LENGTH_SHORT).show();
+                            holder.binding.iconHeart.setColorFilter(white);
+                            tweet.liked = false;
+                        }
+                    });
+                }
+                else{ // un like
+                    tweet.liked = false;
+                    holder.binding.iconHeart.setColorFilter(white);
+                    client.unLike(tweet.id, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.i(TAG, "Successful un-like");
+                            Toast.makeText(context, "Successful unlike!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.e(TAG, "UNSuccessful unlike");
+                            Toast.makeText(context, "failure to unlike!", Toast.LENGTH_SHORT).show();
+                            holder.binding.iconHeart.setColorFilter(red);
+                            tweet.liked = true;
+                        }
+                    });
+                }
+            }
+        });
+
+
+        holder.binding.tvBody.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = ((TimelineActivity) context).getSupportFragmentManager();
+                DetailFragment detailFragment = DetailFragment.newInstance(tweet);
+                detailFragment.show(fm, "detail_fragment");
             }
         });
     }

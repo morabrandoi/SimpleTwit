@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rlLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
@@ -10,8 +9,8 @@
 
     <ImageView
         android:id="@+id/ivProfileImage"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
@@ -27,16 +26,16 @@
         android:layout_marginTop="0dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:textColor="#939393"
-        android:textSize="10sp"
+        android:textSize="12sp"
         tools:text="White Hosue" />
 
     <TextView
         android:id="@+id/tvBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvScreenName"
+        android:layout_below="@+id/ivProfileImage"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="0dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:autoLink="all"
         android:linksClickable="true"
@@ -60,12 +59,13 @@
 
         <ImageView
             android:id="@+id/ivMedia"
-            android:layout_width="257dp"
-            android:layout_height="171dp"
+            android:layout_width="400dp"
+            android:layout_height="270dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="0dp"
             android:visibility="gone"
-            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+            tools:srcCompat="@tools:sample/backgrounds/scenic"
+            tools:visibility="visible" />
     </RelativeLayout>
 
     <TextView
@@ -77,6 +77,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="100dp"
         android:layout_toEndOf="@+id/ivProfileImage"
+        android:textSize="18sp"
         tools:text="Brando" />
 
     <ImageView
@@ -108,7 +109,7 @@
         android:layout_below="@+id/ivMediaWrapper"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="60dp"
         android:tint="#FFFFFF"
         app:srcCompat="@drawable/ic_vector_compose_dm" />
 
@@ -130,7 +131,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvBody"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:visibility="gone" />
+        android:layout_marginTop="0dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </RelativeLayout>

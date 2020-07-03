@@ -16,6 +16,8 @@ public class Tweet {
     public String createdAt;
     public String mediaUrl;
     public User user;
+    public boolean liked;
+    public boolean reTweeted;
     public long id;
 
     // Empty constructor for Required by parcel library
@@ -27,6 +29,9 @@ public class Tweet {
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.id = jsonObject.getLong("id");
+        tweet.liked = jsonObject.getBoolean("favorited");
+        tweet.reTweeted = jsonObject.getBoolean("retweeted");
+
 
         // Pulling media URL if it exists
         JSONObject entities = jsonObject.getJSONObject("entities");
