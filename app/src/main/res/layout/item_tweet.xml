@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="5dp"
-    android:paddingBottom="10dp">
+    android:paddingTop="10dp"
+    android:paddingBottom="20dp">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -25,6 +25,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="0dp"
         android:layout_toEndOf="@+id/ivProfileImage"
+        android:textColor="#939393"
         android:textSize="10sp"
         tools:text="White Hosue" />
 
@@ -85,7 +86,7 @@
         android:layout_marginTop="9dp"
         android:layout_marginEnd="60dp"
         android:layout_toStartOf="@+id/iconRetweet"
-        android:tint="#000000"
+        android:tint="#FFFFFF"
         app:srcCompat="@drawable/vector_compose_dm_fab" />
 
     <ImageView
@@ -96,6 +97,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="60dp"
         android:layout_toStartOf="@+id/iconHeart"
+        android:tint="#FFFFFF"
         app:srcCompat="@drawable/ic_vector_retweet_stroke" />
 
     <ImageView
@@ -106,6 +108,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
+        android:tint="#FFFFFF"
         app:srcCompat="@drawable/ic_vector_compose_dm" />
 
     <ImageView
@@ -116,6 +119,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="60dp"
         android:layout_toStartOf="@+id/iconDM"
+        android:tint="#FFFFFF"
         app:srcCompat="@drawable/ic_vector_heart_stroke" />
 
     <ProgressBar

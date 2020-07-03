@@ -76,6 +76,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         // Setting media image if it exists.
         Log.i(TAG, "My media URL: " + tweet.mediaUrl);
         if (tweet.mediaUrl != null){
+            holder.binding.ivMedia.setVisibility(ImageView.VISIBLE);
             holder.binding.pgBar.setVisibility(ProgressBar.VISIBLE);
             Glide.with(context)
                     .load(tweet.mediaUrl)
@@ -94,6 +95,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     })
                     .into(holder.binding.ivMedia);
             holder.binding.ivMedia.setVisibility(ImageView.VISIBLE);
+        }
+        else{
+            holder.binding.ivMedia.setVisibility(ImageView.GONE);
         }
 
         holder.binding.iconReply.setOnClickListener(new View.OnClickListener() {
